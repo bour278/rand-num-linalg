@@ -144,12 +144,16 @@ function outer_product(vectors::Vector, coefficient::Float64)
     dims = [length(v) for v in vectors]
     result = zeros(dims...)
     
-    for idx in CartesianIndices(dims)
+    # Create array with coordinates for each dimension
+    indices = [1:d for d in dims]
+    
+    # Iterate over all combinations of indices
+    for idx in Iterators.product(indices...)
         value = coefficient
         for d = 1:length(dims)
             value *= vectors[d][idx[d]]
         end
-        result[idx] = value
+        result[idx...] = value
     end
     
     return result
