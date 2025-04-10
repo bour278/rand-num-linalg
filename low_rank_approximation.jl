@@ -40,14 +40,15 @@ function low_rank_approximation(A::Matrix{Float64}, k::Int, r::Int, s::Int)
         R[t, :] = A[i, :] * scaling_factor
     end
     
-    F = svd(C)
-    V_C = F.V[:, 1:min(k, size(F.V, 2))]
+    F_C = svd(C)
+    V_C = F_C.V[:, 1:min(k, size(F_C.V, 2))]
     
     F_R = svd(R)
     U_R = F_R.U[:, 1:min(k, size(F_R.U, 2))]
     
-    CR = C' * A * R'
-    U = V_C * pinv(CR) * U_R'
+    W = C' * A * R'
+    
+    U = V_C * pinv(V_C' * W * U_R) * U_R'
     
     return C * U * R
 end
